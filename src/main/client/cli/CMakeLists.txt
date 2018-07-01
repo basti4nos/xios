@@ -7,11 +7,12 @@
 #
 #==============================================================================#
 
-IF( BUILD_CLI_CLIENT )
-  ADD_SUBDIRECTORY( "client/cli" )
-ENDIF()
-IF( BUILD_GUI_CLIENT )
-  ADD_SUBDIRECTORY( "client/gui" )
-ENDIF()
+SET( name ${XIOS_CLIENT_CLI_NAME} )
 
-ADD_SUBDIRECTORY( "master" )
+FILE( GLOB srcs "*.[ch]pp" )
+
+ADD_EXECUTABLE( ${name} ${srcs} )
+
+TARGET_LINK_LIBRARIES( ${name} ${POCO_LIBRARIES} )
+
+SET_TARGET_PROPERTIES( ${name} PROPERTIES OUTPUT_NAME ${XIOS_CLIENT_CLI_OUTPUT_NAME} )

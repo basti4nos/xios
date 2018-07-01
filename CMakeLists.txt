@@ -29,6 +29,12 @@ SET( USE_POCO ON ) # Required
 OPTION( BUILD_POCO
   "Build The POCO C++ libraries." OFF )
 
+OPTION( BUILD_CLI_CLIENT
+  "Build The XIOS CLI client." ON )
+
+OPTION( BUILD_GUI_CLIENT
+  "Build The XIOS GUI client." OFF )
+
 OPTION( ENABLE_MAKE_DOC
   "Enable generate documentation from source code with Doxygen." OFF )
 
@@ -41,6 +47,12 @@ OPTION( ENABLE_MAKE_TEST
 
 SET( XIOS_NAME ${PACKAGE_NAME} )
 SET( XIOS_OUTPUT_NAME ${XIOS_NAME} )
+
+SET( XIOS_CLIENT_CLI_NAME "${XIOS_NAME}-client.cli" )
+SET( XIOS_CLIENT_CLI_OUTPUT_NAME "${XIOS_NAME}h" )
+
+SET( XIOS_CLIENT_GUI_NAME "${XIOS_NAME}-client.gui" )
+SET( XIOS_CLIENT_GUI_OUTPUT_NAME "${PROJECT_NAME}-Workbench" )
 
 SET( XIOS_MASTER_NAME "${XIOS_NAME}-master" )
 SET( XIOS_MASTER_OUTPUT_NAME ${XIOS_MASTER_NAME} )
@@ -83,7 +95,7 @@ IF( USE_POCO )
     ExternalProject_Add(
       ${EXT_POCO_NAME}
       PREFIX ${EXT_POCO_PREFIX}
-      URL "https://github.com/pocoproject/poco/archive/poco-1.8.0.1-release.zip"
+      URL "https://github.com/pocoproject/poco/archive/poco-1.8.1-release.zip"
       CMAKE_CACHE_ARGS
         "-DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>"
         "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}"
@@ -111,14 +123,14 @@ IF( USE_POCO )
         "-DENABLE_PAGECOMPILER_FILE2PAGE:BOOL=OFF" )
     IF( WIN32 )
       IF( CMAKE_BUILD_TYPE STREQUAL "Debug" )
-        SET( _poco_dlls
+        SET( dlls
           "PocoFoundationd.dll"
           "PocoJSONd.dll"
           "PocoNetd.dll"
           "PocoUtild.dll"
           "PocoXMLd.dll" )
       ELSE()
-        SET( _poco_dlls
+        SET( dlls
           "PocoFoundation.dll"
           "PocoJSON.dll"
           "PocoNet.dll"
@@ -129,7 +141,7 @@ IF( USE_POCO )
         ext-poco post-install DEPENDEES install
         WORKING_DIRECTORY "${EXT_POCO_PREFIX}/bin"
         COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}"
-        COMMAND ${CMAKE_COMMAND} -E copy ${_poco_dlls} "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )
+        COMMAND ${CMAKE_COMMAND} -E copy ${dlls} "${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}" )
     ENDIF()
     INCLUDE_DIRECTORIES( "${EXT_POCO_PREFIX}/include" )
     LINK_DIRECTORIES( "${EXT_POCO_PREFIX}/lib" )
@@ -185,13 +197,13 @@ IF( ENABLE_MAKE_TEST )
 ENDIF()
 
 # include directories
-FOREACH( _subdir "include" "src/libs" )
-  ADD_INCLUDE_DIRECTORY( ${_subdir} )
+FOREACH( dir "include" "src/libs" )
+  ADD_INCLUDE_DIRECTORY( ${dir} )
 ENDFOREACH()
 
 # all subdirectories
-FOREACH( _subdir "include" "src/libs" "src/main" "src/test" "var" )
-  ADD_SUBDIRECTORY( ${_subdir} )
+FOREACH( dir "include" "src/libs" "src/main" "src/test" "var" )
+  ADD_SUBDIRECTORY( ${dir} )
 ENDFOREACH()
 
 #------------------------------------------------------------------------------#
@@ -199,7 +211,9 @@ ENDFOREACH()
 #------------------------------------------------------------------------------#
 
 IF( BUILD_POCO )
-  ADD_DEPENDENCIES( ${XIOS_MASTER_NAME} ${EXT_POCO_NAME} )
+  FOREACH( mod ${XIOS_CLIENT_CLI_NAME} ${XIOS_MASTER_NAME} )
+    ADD_DEPENDENCIES( ${mod} ${EXT_POCO_NAME} )
+  ENDFOREACH()
 ENDIF()
 
 #------------------------------------------------------------------------------#
@@ -220,6 +234,8 @@ INCLUDE( CPack )
 MESSAGE( STATUS "============================================================" )
 MESSAGE( STATUS "PROJECT: ${PROJECT_NAME} ${PROJECT_VERSION}" )
 MESSAGE( STATUS "BUILD_POCO: ${BUILD_POCO}" )
+MESSAGE( STATUS "BUILD_CLI_CLIENT: ${BUILD_CLI_CLIENT}" )
+MESSAGE( STATUS "BUILD_GUI_CLIENT: ${BUILD_GUI_CLIENT}" )
 MESSAGE( STATUS "ENABLE_MAKE_DOC: ${ENABLE_MAKE_DOC}" )
 MESSAGE( STATUS "ENABLE_MAKE_TEST: ${ENABLE_MAKE_TEST}" )
 MESSAGE( STATUS "------------------------------------------------------------" )
@@ -235,13 +251,13 @@ MESSAGE( STATUS "CMAKE_MODULE_LINKER_FLAGS: ${CMAKE_MODULE_LINKER_FLAGS}" )
 MESSAGE( STATUS "CMAKE_SHARED_LINKER_FLAGS: ${CMAKE_SHARED_LINKER_FLAGS}" )
 MESSAGE( STATUS "CMAKE_STATIC_LINKER_FLAGS: ${CMAKE_STATIC_LINKER_FLAGS}" )
 MESSAGE( STATUS "INCLUDE_DIRECTORIES:" )
-GET_PROPERTY( _dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES )
-FOREACH( _dir ${_dirs} )
-  MESSAGE( STATUS "  ${_dir}" )
+GET_PROPERTY( dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES )
+FOREACH( dir ${dirs} )
+  MESSAGE( STATUS "  ${dir}" )
 ENDFOREACH()
 MESSAGE( STATUS "LINK_DIRECTORIES:" )
-GET_PROPERTY( _dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY LINK_DIRECTORIES )
-FOREACH( _dir ${_dirs} )
-  MESSAGE( STATUS "  ${_dir}" )
+GET_PROPERTY( dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY LINK_DIRECTORIES )
+FOREACH( dir ${dirs} )
+  MESSAGE( STATUS "  ${dir}" )
 ENDFOREACH()
 MESSAGE( STATUS "============================================================" )

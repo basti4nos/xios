@@ -1,0 +1,23 @@
+/*============================================================================*/
+/*
+ *                     XIOS - http://metasophia.org/xios
+ *
+ *  This file is part of the XIOS, distributed under the ISC License.
+ *  Please see the LICENSE.txt file for details on copyright and licensing.
+ *
+ *============================================================================*/
+
+#pragma once
+
+#include <QtWidgets>
+
+namespace xios{
+
+class CentralWidget: public QTabWidget{
+  Q_OBJECT
+public:
+  CentralWidget( QWidget* parent = 0 );
+  ~CentralWidget();
+};
+
+} // namespace xios
