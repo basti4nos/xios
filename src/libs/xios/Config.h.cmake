@@ -24,6 +24,8 @@
 #define XIOS_VERSION_MINOR @XIOS_VERSION_MINOR@
 /*! */
 #define XIOS_VERSION_PATCH @XIOS_VERSION_PATCH@
+/*! */
+#define XIOS_ORGANIZATION "@XIOS_ORGANIZATION@"
 
 /*----------------------------------------------------------------------------*
  * XIOS Module Definitions
