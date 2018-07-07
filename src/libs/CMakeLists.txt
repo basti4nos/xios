@@ -7,4 +7,9 @@
 #
 #==============================================================================#
 
+IF( BUILD_XIOC )
+  ADD_SUBDIRECTORY( "xioc" )
+ENDIF()
+
+ADD_SUBDIRECTORY( "xiop" )
 ADD_SUBDIRECTORY( "xios" )

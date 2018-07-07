@@ -18,6 +18,8 @@ PROJECT( XIOS VERSION 0.0.0 LANGUAGES C CXX )
 #  Global Variables
 #------------------------------------------------------------------------------#
 
+SET( XIOS_ORGANIZATION "metasophia.org" )
+
 STRING( TOLOWER ${PROJECT_NAME} PACKAGE_NAME )
 
 SET( USE_POCO ON ) # Required
@@ -28,6 +30,9 @@ SET( USE_POCO ON ) # Required
 
 OPTION( BUILD_POCO
   "Build The POCO C++ libraries." OFF )
+
+OPTION( BUILD_XIOC
+  "Build The XIOC library." ON )
 
 OPTION( BUILD_CLI_CLIENT
   "Build The XIOS CLI client." ON )
@@ -45,17 +50,33 @@ OPTION( ENABLE_MAKE_TEST
 #  Project Modules
 #------------------------------------------------------------------------------#
 
-SET( XIOS_NAME ${PACKAGE_NAME} )
+# libs/xioc
+SET( XIOC_NAME "xioc" )
+SET( XIOC_OUTPUT_NAME ${XIOC_NAME} )
+# libs/xiop
+SET( XIOP_NAME "xiop" )
+SET( XIOP_OUTPUT_NAME ${XIOP_NAME} )
+# libs/xios
+SET( XIOS_NAME "xios" )
 SET( XIOS_OUTPUT_NAME ${XIOS_NAME} )
-
+# main/client/cli
 SET( XIOS_CLIENT_CLI_NAME "${XIOS_NAME}-client.cli" )
-SET( XIOS_CLIENT_CLI_OUTPUT_NAME "${XIOS_NAME}h" )
-
+SET( XIOS_CLIENT_CLI_OUTPUT_NAME "xiosh" )
+# main/client/gui
 SET( XIOS_CLIENT_GUI_NAME "${XIOS_NAME}-client.gui" )
-SET( XIOS_CLIENT_GUI_OUTPUT_NAME "${PROJECT_NAME}-Workbench" )
-
+SET( XIOS_CLIENT_GUI_OUTPUT_NAME "XIOS_Workbench" )
+# main/master
 SET( XIOS_MASTER_NAME "${XIOS_NAME}-master" )
 SET( XIOS_MASTER_OUTPUT_NAME ${XIOS_MASTER_NAME} )
+# main/server
+SET( XIOS_SERVER_NAME "${XIOS_NAME}-server" )
+SET( XIOS_SERVER_OUTPUT_NAME ${XIOS_SERVER_NAME} )
+# main/worker
+SET( XIOS_WORKER_NAME "${XIOS_NAME}-worker" )
+SET( XIOS_WORKER_OUTPUT_NAME ${XIOS_WORKER_NAME} )
+# test/tester
+SET( XIOS_TESTER_NAME "${XIOS_NAME}-tester" )
+SET( XIOS_TESTER_OUTPUT_NAME ${XIOS_TESTER_NAME} )
 
 #------------------------------------------------------------------------------#
 #  Check Environment
@@ -211,9 +232,35 @@ ENDFOREACH()
 #------------------------------------------------------------------------------#
 
 IF( BUILD_POCO )
-  FOREACH( mod ${XIOS_CLIENT_CLI_NAME} ${XIOS_MASTER_NAME} )
-    ADD_DEPENDENCIES( ${mod} ${EXT_POCO_NAME} )
-  ENDFOREACH()
+  IF( BUILD_CLI_CLIENT )
+    ADD_DEPENDENCIES( ${XIOS_CLIENT_CLI_NAME} ${EXT_POCO_NAME} )
+  ENDIF()
+  ADD_DEPENDENCIES( ${XIOS_NAME} ${EXT_POCO_NAME} )
+  ADD_DEPENDENCIES( ${XIOS_MASTER_NAME} ${EXT_POCO_NAME} )
+  ADD_DEPENDENCIES( ${XIOS_SERVER_NAME} ${EXT_POCO_NAME} )
+  ADD_DEPENDENCIES( ${XIOS_WORKER_NAME} ${EXT_POCO_NAME} )
+  IF( ENABLE_MAKE_TEST )
+    ADD_DEPENDENCIES( ${XIOS_TESTER_NAME} ${EXT_POCO_NAME} )
+  ENDIF()
+ENDIF()
+
+IF( BUILD_XIOC )
+  ADD_DEPENDENCIES( ${XIOC_NAME} ${XIOP_NAME} )
+ENDIF()
+IF( BUILD_CLI_CLIENT )
+  ADD_DEPENDENCIES( ${XIOS_CLIENT_CLI_NAME} ${XIOC_NAME} )
+ENDIF()
+IF( BUILD_GUI_CLIENT )
+  ADD_DEPENDENCIES( ${XIOS_CLIENT_GUI_NAME} ${XIOC_NAME} )
+ENDIF()
+
+IF( TRUE )
+  ADD_DEPENDENCIES( ${XIOS_MASTER_NAME} ${XIOP_NAME} ${XIOS_NAME} )
+  ADD_DEPENDENCIES( ${XIOS_SERVER_NAME} ${XIOP_NAME} ${XIOS_NAME} )
+  ADD_DEPENDENCIES( ${XIOS_WORKER_NAME} ${XIOP_NAME} ${XIOS_NAME} )
+ENDIF()
+IF( ENABLE_MAKE_TEST )
+  ADD_DEPENDENCIES( ${XIOS_TESTER_NAME} ${XIOP_NAME} ${XIOS_NAME} )
 ENDIF()
 
 #------------------------------------------------------------------------------#
@@ -234,6 +281,7 @@ INCLUDE( CPack )
 MESSAGE( STATUS "============================================================" )
 MESSAGE( STATUS "PROJECT: ${PROJECT_NAME} ${PROJECT_VERSION}" )
 MESSAGE( STATUS "BUILD_POCO: ${BUILD_POCO}" )
+MESSAGE( STATUS "BUILD_XIOC: ${BUILD_XIOC}" )
 MESSAGE( STATUS "BUILD_CLI_CLIENT: ${BUILD_CLI_CLIENT}" )
 MESSAGE( STATUS "BUILD_GUI_CLIENT: ${BUILD_GUI_CLIENT}" )
 MESSAGE( STATUS "ENABLE_MAKE_DOC: ${ENABLE_MAKE_DOC}" )

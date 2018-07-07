@@ -6,3 +6,7 @@
 #   Please see the LICENSE.txt file for details on copyright and licensing.
 #
 #==============================================================================#
+
+IF( ENABLE_MAKE_TEST )
+  ADD_SUBDIRECTORY( "tester" )
+ENDIF()
