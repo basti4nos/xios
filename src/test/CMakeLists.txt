@@ -8,5 +8,12 @@
 #==============================================================================#
 
 IF( ENABLE_MAKE_TEST )
-  ADD_SUBDIRECTORY( "tester" )
+  # Add sub-directories
+  FILE( GLOB dirs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "*" )
+  LIST( SORT dirs )
+  FOREACH( dir ${dirs} )
+    IF( IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${dir}" )
+      ADD_SUBDIRECTORY( ${dir} )
+    ENDIF()
+  ENDFOREACH()
 ENDIF()

@@ -7,43 +7,41 @@
  *
  *============================================================================*/
 
-#include "InstanceTester.hpp"
+#include <string>
+#include <vector>
 #include <iostream>
 #include <Poco/Exception.h>
+#include <Poco/Util/Application.h>
 #include <Poco/Util/HelpFormatter.h>
 #include <Poco/Util/Option.h>
 #include <Poco/Util/OptionCallback.h>
+#include <Poco/Util/OptionSet.h>
 #include "xios/Config.h"
 
-using namespace xios;
+using Poco::Util::Application;
 using Poco::Util::HelpFormatter;
 using Poco::Util::Option;
 using Poco::Util::OptionCallback;
+using Poco::Util::OptionSet;
+
+class xios_Test: public Application{
+public:
+  xios_Test(){ setUnixOptions( true ); }
+protected:
+  void defineOptions( OptionSet& opts );
+  void handleOption( const std::string& name, const std::string& value );
+  int main( const std::vector< std::string >& args );
+};
 
 /*----------------------------------------------------------------------------*/
-InstanceTester::InstanceTester()
-{
-  setUnixOptions( true );
-}
+POCO_APP_MAIN( xios_Test )
 
 /*----------------------------------------------------------------------------*/
-void InstanceTester::initialize( Application& self )
-{
-  Application::initialize( self );
-}
-
-/*----------------------------------------------------------------------------*/
-void InstanceTester::uninitialize()
-{
-  Application::uninitialize();
-}
-
-/*----------------------------------------------------------------------------*/
-void InstanceTester::defineOptions( OptionSet& opts )
+void xios_Test::defineOptions( OptionSet& opts )
 {
   Application::defineOptions( opts );
 
-  OptionCallback< InstanceTester > handler( this, &InstanceTester::handleOption );
+  OptionCallback< xios_Test > handler( this, &xios_Test::handleOption );
 
   opts.addOption(
     Option( "help", "?", "Display this information and exit." )
@@ -55,7 +53,7 @@ void InstanceTester::defineOptions( OptionSet& opts )
 }
 
 /*----------------------------------------------------------------------------*/
-void InstanceTester::handleOption( const std::string& name, const std::string& value )
+void xios_Test::handleOption( const std::string& name, const std::string& value )
 {
   if( name == "help" )
   {
@@ -79,7 +77,7 @@ void InstanceTester::handleOption( const std::string& name, const std::string& v
 }
 
 /*----------------------------------------------------------------------------*/
-int InstanceTester::main( const std::vector< std::string >& args )
+int xios_Test::main( const std::vector< std::string >& args )
 {
   try
   {
