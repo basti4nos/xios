@@ -7,7 +7,7 @@
 #
 #==============================================================================#
 
-CMAKE_MINIMUM_REQUIRED( VERSION 3.9.6 )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.9.2 )
 
 SET( CMAKE_DISABLE_SOURCE_CHANGES  ON )
 SET( CMAKE_DISABLE_IN_SOURCE_BUILD ON )
