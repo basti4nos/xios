@@ -9,19 +9,15 @@
 
 #pragma once
 
-#include <string>
 #include "xios/Config.h"
 
 namespace xios{ namespace xio{
 
-class XIOS_API Instance{
+class XIOS_API Service{
 public:
-  static void format( const std::string& path );
-public:
-  Instance( const std::string& path );
-  const std::string& path() const;
-private:
-  std::string _path;
+  virtual void setup() = 0;
+  virtual void start() = 0;
+  virtual void stop() = 0;
 };
 
 }} // namespace xios::xio

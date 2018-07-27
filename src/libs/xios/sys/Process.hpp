@@ -10,18 +10,17 @@
 #pragma once
 
 #include <string>
+#include <Poco/Process.h>
 #include "xios/Config.h"
 
-namespace xios{ namespace xio{
+namespace xios{ namespace sys{
 
-class XIOS_API Instance{
+using Poco::ProcessHandle;
+
+class XIOS_API Process: public Poco::Process{
 public:
-  static void format( const std::string& path );
-public:
-  Instance( const std::string& path );
-  const std::string& path() const;
-private:
-  std::string _path;
+  static bool changeGroup( const std::string& name );
+  static bool changeUser( const std::string& name );
 };
 
-}} // namespace xios::xio
+}} // namespace xios::sys

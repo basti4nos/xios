@@ -10,18 +10,15 @@
 #pragma once
 
 #include <string>
+#include <Poco/SharedLibrary.h>
 #include "xios/Config.h"
 
-namespace xios{ namespace xio{
+namespace xios{ namespace sys{
 
-class XIOS_API Instance{
+class XIOS_API SharedLibrary: public Poco::SharedLibrary{
 public:
-  static void format( const std::string& path );
-public:
-  Instance( const std::string& path );
-  const std::string& path() const;
-private:
-  std::string _path;
+  static std::string prefix();
+  static std::string suffix();
 };
 
-}} // namespace xios::xio
+}} // namespace xios::sys

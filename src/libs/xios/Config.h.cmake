@@ -47,6 +47,14 @@
 #define XIOS_MASTER_NAME "@XIOS_MASTER_NAME@"
 /*! */
 #define XIOS_MASTER_OUTPUT_NAME "@XIOS_MASTER_OUTPUT_NAME@"
+/*! */
+#define XIOS_SERVER_NAME "@XIOS_SERVER_NAME@"
+/*! */
+#define XIOS_SERVER_OUTPUT_NAME "@XIOS_SERVER_OUTPUT_NAME@"
+/*! */
+#define XIOS_WORKER_NAME "@XIOS_WORKER_NAME@"
+/*! */
+#define XIOS_WORKER_OUTPUT_NAME "@XIOS_WORKER_OUTPUT_NAME@"
 
 /*----------------------------------------------------------------------------*
  * Check Function Exists

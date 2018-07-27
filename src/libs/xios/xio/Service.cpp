@@ -7,21 +7,4 @@
  *
  *============================================================================*/
 
-#pragma once
-
-#include <string>
-#include "xios/Config.h"
-
-namespace xios{ namespace xio{
-
-class XIOS_API Instance{
-public:
-  static void format( const std::string& path );
-public:
-  Instance( const std::string& path );
-  const std::string& path() const;
-private:
-  std::string _path;
-};
-
-}} // namespace xios::xio
+#include "Service.hpp"

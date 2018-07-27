@@ -11,17 +11,21 @@
 
 #include <string>
 #include "xios/Config.h"
+#include "Process.hpp"
 
-namespace xios{ namespace xio{
+namespace xios{ namespace sys{
 
-class XIOS_API Instance{
+class XIOS_API Command{
 public:
-  static void format( const std::string& path );
+  typedef Process::Args Arguments;
 public:
-  Instance( const std::string& path );
-  const std::string& path() const;
+  Command( const std::string& name );
+  Command( const std::string& name, const Arguments& args );
+  const std::string& name() const;
+  const Arguments& args() const;
 private:
-  std::string _path;
+  std::string _name;
+  Arguments _args;
 };
 
-}} // namespace xios::xio
+}} // namespace xios::sys
