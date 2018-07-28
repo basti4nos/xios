@@ -1,21 +1,33 @@
 language: cpp
 
-addons:
-  apt:
-    sources:
-    packages:
-      - cmake
-      - cmake-data
-      - libpoco-dev
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+      env:
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
 
-compiler:
-  - clang
-  - gcc
+before_install:
+    - eval "${MATRIX_EVAL}"
 
 before_script:
   - cd "${TRAVIS_BUILD_DIR}"
   - mkdir build && cd build
-  - cmake .. -DENABLE_MAKE_TEST=ON
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_POCO=ON -DENABLE_MAKE_TEST=ON
 
 script:
   - cmake --build . -- -j${JOBS}
