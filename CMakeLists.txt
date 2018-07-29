@@ -228,36 +228,6 @@ FOREACH( dir "include" "src/libs" "src/main" "src/test" "var" )
 ENDFOREACH()
 
 #------------------------------------------------------------------------------#
-#  Dependencies
-#------------------------------------------------------------------------------#
-
-IF( BUILD_POCO )
-  IF( BUILD_CLI_CLIENT )
-    ADD_DEPENDENCIES( ${XIOS_CLIENT_CLI_NAME} ${EXT_POCO_NAME} )
-  ENDIF()
-  ADD_DEPENDENCIES( ${XIOS_NAME} ${EXT_POCO_NAME} )
-  ADD_DEPENDENCIES( ${XIOS_MASTER_NAME} ${EXT_POCO_NAME} )
-  ADD_DEPENDENCIES( ${XIOS_SERVER_NAME} ${EXT_POCO_NAME} )
-  ADD_DEPENDENCIES( ${XIOS_WORKER_NAME} ${EXT_POCO_NAME} )
-ENDIF()
-
-IF( BUILD_XIOC )
-  ADD_DEPENDENCIES( ${XIOC_NAME} ${XIOP_NAME} )
-ENDIF()
-IF( BUILD_CLI_CLIENT )
-  ADD_DEPENDENCIES( ${XIOS_CLIENT_CLI_NAME} ${XIOC_NAME} )
-ENDIF()
-IF( BUILD_GUI_CLIENT )
-  ADD_DEPENDENCIES( ${XIOS_CLIENT_GUI_NAME} ${XIOC_NAME} )
-ENDIF()
-
-IF( TRUE )
-  ADD_DEPENDENCIES( ${XIOS_MASTER_NAME} ${XIOP_NAME} ${XIOS_NAME} )
-  ADD_DEPENDENCIES( ${XIOS_SERVER_NAME} ${XIOP_NAME} ${XIOS_NAME} )
-  ADD_DEPENDENCIES( ${XIOS_WORKER_NAME} ${XIOP_NAME} ${XIOS_NAME} )
-ENDIF()
-
-#------------------------------------------------------------------------------#
 #  CPack Package
 #------------------------------------------------------------------------------#
 
